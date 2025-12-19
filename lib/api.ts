@@ -27,8 +27,8 @@ export function addProduct(org_id: string, name: string, description: string) {
 // FEEDBACK Dummy
 export function getFeedbacks(org_id: string, product_id: string) {
   return [
-    { id: "fb1", title: "Dark Mode", description: "Support dark mode", status: "open" },
-    { id: "fb2", title: "Speed", description: "Faster load times", status: "done" },
+    { id: "fb1", title: "Dark Mode", description: "Support dark mode", status: "open",votes:1 },
+    { id: "fb2", title: "Speed", description: "Faster load times", status: "done" ,votes:1},
   ];
 }
 export function addFeedback(org_id: string, product_id: string, title: string, description: string) {

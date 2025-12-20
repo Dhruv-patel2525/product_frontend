@@ -2,22 +2,39 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ErrorAlert from "@/components/ErrorAlert";
+import { useRegisterMutation } from "@/lib/auth";
 
 export default function RegisterPage() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState(""); // This is email
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
+  const registerMutation = useRegisterMutation();
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
     try {
-      // Skip API for mock
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+      await registerMutation.mutateAsync({
+        name,
+        username, // This is the email
+        password,
+      });
+
+      // Check for pending invitation token after successful registration
+      const pendingToken = sessionStorage.getItem('pendingInviteToken');
+      if (pendingToken) {
+        sessionStorage.removeItem('pendingInviteToken');
+        router.push(`/invitations/accept?token=${pendingToken}`);
+      } else {
+        // On successful registration, redirect to login
+        router.push("/login");
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
     }
   }
 
@@ -28,16 +45,16 @@ export default function RegisterPage() {
         {error && <ErrorAlert message={error} />}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            placeholder="Username"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder="Full Name"
             required
             className="border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
           <input
             type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            value={username}
+            onChange={e => setUsername(e.target.value)}
             placeholder="Email"
             required
             className="border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -50,8 +67,12 @@ export default function RegisterPage() {
             required
             className="border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition-colors mt-2">
-            Register
+          <button
+            type="submit"
+            disabled={registerMutation.isPending}
+            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 rounded transition-colors mt-2"
+          >
+            {registerMutation.isPending ? "Registering..." : "Register"}
           </button>
         </form>
         <div className="text-center text-sm text-gray-600 mt-4">

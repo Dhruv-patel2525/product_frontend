@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ErrorAlert from "@/components/ErrorAlert";
+import { useLoginMutation } from "@/lib/auth";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -9,14 +10,22 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
+  const loginMutation = useLoginMutation();
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
     try {
-      // For mock: skip API
+      await loginMutation.mutateAsync({
+        username,
+        password,
+      });
+
+      // On successful login, redirect to dashboard
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Login failed');
     }
   }
 
@@ -29,7 +38,8 @@ export default function LoginPage() {
           <input
             value={username}
             onChange={e => setUsername(e.target.value)}
-            placeholder="Username"
+            placeholder="Email"
+            type="email"
             required
             className="border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
@@ -41,12 +51,16 @@ export default function LoginPage() {
             required
             className="border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition-colors mt-2">
-            Log in
+          <button
+            type="submit"
+            disabled={loginMutation.isPending}
+            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 rounded transition-colors mt-2"
+          >
+            {loginMutation.isPending ? "Logging in..." : "Log in"}
           </button>
         </form>
         <div className="text-center text-sm text-gray-600 mt-4">
-          Don&#39;t have an account? <button className="text-blue-600 hover:underline" onClick={()=>router.push('/register')}>Register</button>
+          Don&apos;t have an account? <button className="text-blue-600 hover:underline" onClick={()=>router.push('/register')}>Register</button>
         </div>
       </div>
     </div>

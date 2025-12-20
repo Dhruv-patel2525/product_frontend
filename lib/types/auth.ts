@@ -144,3 +144,9 @@ export interface OrgMembersResponse {
   data?: OrgMember[];
   error?: ApiError;
 }
+
+export interface VoteResponse {
+  success: boolean;
+  data?: string; 
+  error?: ApiError;
+}

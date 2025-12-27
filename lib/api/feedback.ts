@@ -17,7 +17,7 @@ const getAuthHeaders = () => {
 };
 
 export const getProductFeedback = async (orgId: string, productId: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/orgs/${orgId}/products/${productId}/feedback`, {
+  const response = await fetch(`/api/v1/orgs/${orgId}/products/${productId}/feedback`, {
     headers: getAuthHeaders(),
   });
 
@@ -36,7 +36,7 @@ export const getProductFeedback = async (orgId: string, productId: string) => {
 };
 
 export const createFeedback = async (orgId: string, productId: string, data: CreateFeedbackRequest) => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/orgs/${orgId}/products/${productId}/feedback`, {
+  const response = await fetch(`/api/v1/orgs/${orgId}/products/${productId}/feedback`, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
@@ -57,7 +57,7 @@ export const createFeedback = async (orgId: string, productId: string, data: Cre
 };
 
 export const updateFeedbackStatus = async (orgId: string, productId: string, feedbackId: string, status: 'NEW' | 'IN_PROGRESS' | 'DONE') => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/orgs/${orgId}/products/${productId}/feedback/${feedbackId}/status`, {
+  const response = await fetch(`/api/v1/orgs/${orgId}/products/${productId}/feedback/${feedbackId}/status`, {
     method: 'PATCH',
     headers: getAuthHeaders(),
     body: JSON.stringify({ status }),
@@ -78,7 +78,7 @@ export const updateFeedbackStatus = async (orgId: string, productId: string, fee
 };
 
 export const voteFeedback = async (orgId: string, productId: string, feedbackId: string, value: boolean) => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/orgs/${orgId}/products/${productId}/feedback/${feedbackId}/votes`, {
+  const response = await fetch(`/api/v1/orgs/${orgId}/products/${productId}/feedback/${feedbackId}/votes`, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({ value }),
@@ -99,7 +99,7 @@ export const voteFeedback = async (orgId: string, productId: string, feedbackId:
 };
 
 export const getFeedbackVotes = async (orgId: string, productId: string, feedbackId: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/orgs/${orgId}/products/${productId}/feedback/${feedbackId}/votes`, {
+  const response = await fetch(`/api/v1/orgs/${orgId}/products/${productId}/feedback/${feedbackId}/votes`, {
     headers: getAuthHeaders(),
   });
 

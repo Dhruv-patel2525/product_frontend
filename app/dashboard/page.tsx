@@ -85,9 +85,12 @@ function DashboardContent() {
         {/* Organizations Section */}
         <div className="bg-white rounded-lg border">
           <div className="px-6 py-4 border-b border-gray-200">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
               <h2 className="text-xl font-semibold text-gray-900">Organizations</h2>
-              <Button onClick={() => setCreateModalOpen(true)}>
+              <Button 
+                className="h-9 px-3 text-sm self-start md:h-10 md:px-4 md:text-base md:self-auto" 
+                onClick={() => setCreateModalOpen(true)}
+              >
                 <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>

@@ -7,7 +7,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const useRegisterMutation = () => {
   return useMutation<RegisterResponse, Error, RegisterRequest>({
     mutationFn: async (data: RegisterRequest): Promise<RegisterResponse> => {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/user/register`, {
+      const response = await fetch(`/api/v1/auth/user/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const useRegisterMutation = () => {
 export const useLoginMutation = () => {
   return useMutation<LoginResponse, Error, LoginRequest>({
     mutationFn: async (data: LoginRequest): Promise<LoginResponse> => {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/user/login`, {
+      const response = await fetch(`/api/v1/auth/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

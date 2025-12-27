@@ -38,7 +38,7 @@ export default function CreateOrganizationModal({ open, onOpenChange }: CreateOr
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleClose} >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Create New Organization</DialogTitle>
@@ -47,7 +47,7 @@ export default function CreateOrganizationModal({ open, onOpenChange }: CreateOr
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" style={{ padding: '20px' }}>
           <div className="space-y-2">
             <label htmlFor="org-name" className="text-sm font-medium">
               Organization Name

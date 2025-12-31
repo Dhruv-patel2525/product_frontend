@@ -39,7 +39,7 @@ export function OrgSidebar({ activeView, onViewChange, productCount = 0, feedbac
       label: 'Feedback',
       icon: ChatBubbleLeftRightIcon,
       count: feedbackCount,
-      premium: true,
+      premium: false,
     },
   ];
 

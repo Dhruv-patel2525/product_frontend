@@ -14,6 +14,8 @@ import { OrgMembers } from "@/components/org/views/OrgMembers";
 import { UnauthorizedAccess } from "@/components/UnauthorizedAccess";
 import TopBar from '@/components/layout/TopBar';
 import { Organization } from "@/lib/types/auth";
+import { Button } from "@/components/ui/button";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 
 export default function OrgPage() {
   const params = useParams();
@@ -22,6 +24,7 @@ export default function OrgPage() {
   const orgId = orgIdString ? Number(orgIdString) : undefined;
   const [activeView, setActiveView] = useState<'overview' | 'products' | 'feedback' | 'members'>('overview');
   const [validationTimedOut, setValidationTimedOut] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Get organization data
   const { data: organizations, isLoading: orgsLoading, error: orgsError } = useOrganizations();
@@ -67,12 +70,18 @@ export default function OrgPage() {
      return activeMemberships.length;
    }, [user]);
 
-   const hasManageMembersPermission = useMemo(() => {
-     return orgIdNum ? canManageMembers(user, orgIdNum) : false;
-   }, [user, orgIdNum]);
+    const hasManageMembersPermission = useMemo(() => {
+      return orgIdNum ? canManageMembers(user, orgIdNum) : false;
+    }, [user, orgIdNum]);
 
-   // Check for API errors (403, etc.)
-   const hasApiError = orgsError || productsError;
+    // Check for API errors (403, etc.)
+    const hasApiError = orgsError || productsError;
+
+    // Mobile navigation handler
+    const handleMobileNavigation = (view: 'overview' | 'products' | 'feedback' | 'members') => {
+      setActiveView(view);
+      setIsSidebarOpen(false);
+    };
 
   const renderActiveView = () => {
     switch (activeView) {
@@ -98,20 +107,56 @@ export default function OrgPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Custom header for mobile navigation */}
+      <div className="md:hidden border-b bg-white sticky top-0 z-30">
+        <div className="flex h-16 items-center px-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setIsSidebarOpen(true)}
+            className="mr-4"
+          >
+            <Bars3Icon className="h-5 w-5" />
+          </Button>
+          <h1 className="text-lg font-semibold text-gray-900">{currentOrg?.name || 'Organization'}</h1>
+        </div>
+      </div>
+
       <TopBar breadcrumbItems={breadcrumbItems} />
+      
       <div className="flex">
-        {/* Sidebar */}
-        <OrgSidebar
-          activeView={activeView}
-          onViewChange={setActiveView}
-          productCount={productCount}
-          feedbackCount={feedbackCount}
-          memberCount={memberCount}
-          canManageMembers={hasManageMembersPermission}
-        />
+        {/* Desktop Sidebar */}
+        <div className="hidden md:block w-64">
+          <OrgSidebar
+            activeView={activeView}
+            onViewChange={setActiveView}
+            productCount={productCount}
+            feedbackCount={feedbackCount}
+            memberCount={memberCount}
+            canManageMembers={hasManageMembersPermission}
+          />
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+          <>
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+            <div className="fixed inset-y-0 left-0 z-50 w-64 md:hidden">
+              <OrgSidebar
+                activeView={activeView}
+                onViewChange={handleMobileNavigation}
+                productCount={productCount}
+                feedbackCount={feedbackCount}
+                memberCount={memberCount}
+                canManageMembers={hasManageMembersPermission}
+                onClose={() => setIsSidebarOpen(false)}
+              />
+            </div>
+          </>
+        )}
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 md:p-8">
           <div className="max-w-6xl mx-auto">
             {renderActiveView()}
           </div>

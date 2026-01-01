@@ -1,7 +1,7 @@
 import { getAuthTokens } from '@/lib/auth-storage';
 import { User } from '@/lib/types/auth';
 
-const API_BASE_URL = '';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const getAuthHeaders = () => {
   const tokens = getAuthTokens();

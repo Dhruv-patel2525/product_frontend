@@ -185,6 +185,8 @@ export function ProductCard({ orgId, product }: ProductCardProps) {
                   feedback={item}
                   onVote={(value: boolean) => handleVote(item.id.toString(), value)}
                   isVoting={voteMutation.isPending}
+                  orgId={orgId}
+                  productId={product.id.toString()}
                 />
               ))
             ) : (

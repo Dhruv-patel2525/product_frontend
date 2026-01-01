@@ -1,7 +1,8 @@
 "use client";
 
-import { ChartBarIcon, CubeIcon, ChatBubbleLeftRightIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { ChartBarIcon, CubeIcon, ChatBubbleLeftRightIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { PremiumFeatureGate } from "@/components/ui/PremiumFeatureGate";
+import { ComponentType } from "react";
 
 interface OrgSidebarProps {
   activeView: 'overview' | 'products' | 'feedback' | 'members';
@@ -10,13 +11,24 @@ interface OrgSidebarProps {
   feedbackCount?: number;
   memberCount?: number;
   canManageMembers?: boolean;
+  onClose?: () => void;
+  className?: string;
 }
 
-export function OrgSidebar({ activeView, onViewChange, productCount = 0, feedbackCount = 0, memberCount = 0, canManageMembers = false }: OrgSidebarProps) {
+export function OrgSidebar({ 
+  activeView, 
+  onViewChange, 
+  productCount = 0, 
+  feedbackCount = 0, 
+  memberCount = 0, 
+  canManageMembers = false,
+  onClose,
+  className = ""
+}: OrgSidebarProps) {
   const navigationItems: Array<{
     id: 'overview' | 'products' | 'feedback' | 'members';
     label: string;
-    icon: any;
+    icon: ComponentType<{ className?: string }>;
     count: number | null;
     premium: boolean;
   }> = [
@@ -55,7 +67,20 @@ export function OrgSidebar({ activeView, onViewChange, productCount = 0, feedbac
   }
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-full">
+    <div className={`bg-white border-r border-gray-200 h-full ${className}`}>
+      {/* Mobile Header with Close Button */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 md:hidden">
+        <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+          >
+            <XMarkIcon className="h-6 w-6" />
+          </button>
+        )}
+      </div>
+
       <nav className="p-4 space-y-2">
         {navigationItems.map((item) => {
           const Icon = item.icon;

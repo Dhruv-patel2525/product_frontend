@@ -150,3 +150,46 @@ export interface VoteResponse {
   data?: string; 
   error?: ApiError;
 }
+
+export interface SummarizeRequest {
+  force?: boolean;
+}
+
+export interface ThreadSummaryContent {
+  summary: string;
+  key_requests: string[];
+  sentiment: {
+    label: string;
+    confidence: number;
+  };
+  pain_level: {
+    label: string;
+    reason: string;
+    citations: Array<{
+      type: string;
+      id: string;
+    }>;
+  };
+  clarifying_questions: string[];
+  suggested_next_step: {
+    step: string;
+    citations: Array<{
+      type: string;
+      id: string;
+    }>;
+  };
+}
+
+export interface ArtifactResponse {
+  artifact_id: number;
+  kind: string;
+  input_hash: string;
+  content: ThreadSummaryContent;
+  created_at: string;
+}
+
+export interface AISummaryResponse {
+  success: boolean;
+  data?: ArtifactResponse;
+  error?: ApiError;
+}

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getProductFeedback, createFeedback, updateFeedbackStatus, voteFeedback } from '@/lib/api/feedback';
+import { getProductFeedback, createFeedback, updateFeedbackStatus, voteFeedback, getFeedbackAISummary } from '@/lib/api/feedback';
 import { CreateFeedbackRequest } from '@/lib/types/auth';
 
 export const useProductFeedback = (orgId: string, productId: string) => {
@@ -55,6 +55,26 @@ export const useVoteFeedback = () => {
       voteFeedback(orgId, productId, feedbackId, value),
     onSuccess: (_, { orgId, productId }) => {
       queryClient.invalidateQueries({ queryKey: ['feedback', orgId, productId] });
+    },
+  });
+};
+
+export const useFeedbackAISummary = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ orgId, productId, feedbackId, force }: {
+      orgId: string;
+      productId: string;
+      feedbackId: string;
+      force?: boolean;
+    }) => getFeedbackAISummary(orgId, productId, feedbackId, force),
+    // Cache the summary for the specific feedback item
+    onSuccess: (data, { orgId, productId, feedbackId }) => {
+      queryClient.setQueryData(
+        ['feedback-summary', orgId, productId, feedbackId],
+        data
+      );
     },
   });
 };
